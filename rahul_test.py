@@ -13,16 +13,16 @@ new_st_data = st_data[st_data.columns[0]].str.split("_", n = 6, expand=True)
 # st_data['lname'] = st_data['id_fname_lname_email_ssn_address_cid'].map(lambda x:x.split('_')[1])
 #
 #
-st_data['name'] = new_st_data[1] + '_' + new_st_data[2]
+new_st_data['name'] = new_st_data[1] + '_' + new_st_data[2]
 
 tc_data['name'] = tc_data['fname'] + '_' + tc_data['lname']
 
 json_data = {}
-for index, row in st_data.iterrows():
+for index, row in new_st_data.iterrows():
     for tc_index, tc_row in tc_data.iterrows():
-        if row['cid'] == tc_row['cid']:
+        if row[6] == tc_row['cid']:
             json_data[row['name']] = {
-                "class": row['cid'],
+                "class": row[6],
                 "teacher_name": tc_row['name'],
                 "teacher_id": tc_row['id']
             }
