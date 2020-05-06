@@ -5,17 +5,15 @@ import pandas as pd
 tc_data = pd.read_parquet('teachers.parquet', engine='pyarrow')
 st_data = pd.read_csv('students.csv')
 
+new_st_data = st_data[st_data.columns[0]].str.split("_", n = 6, expand=True)
+# st_data['cid'] = st_data['id_fname_lname_email_ssn_address_cid'].map(lambda x:x.split('_')[-1])
 
-st_data['cid'] = st_data['id_fname_lname_email_ssn_address_cid'].map(lambda x:x.split('_')[-1])
-
-st_data['fname'] = st_data['id_fname_lname_email_ssn_address_cid'].map(lambda x:x.split('_')[1])
-st_data['lname'] = st_data['id_fname_lname_email_ssn_address_cid'].map(lambda x:x.split('_')[1])
-
-
-st_data['name'] = st_data['fname'] + '_' + st_data['lname']
-
-tc_data['name'] = tc_data['fname'] + '_' + tc_data['lname']
-
+# print(st_data)
+# st_data['fname'] = st_data['id_fname_lname_email_ssn_address_cid'].map(lambda x:x.split('_')[1])
+# st_data['lname'] = st_data['id_fname_lname_email_ssn_address_cid'].map(lambda x:x.split('_')[1])
+#
+#
+st_data['name'] = new_st_data[1] + '_' + new_st_data[2]
 
 tc_data['name'] = tc_data['fname'] + '_' + tc_data['lname']
 
