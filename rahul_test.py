@@ -1,4 +1,3 @@
-# import pyarrow.parquet as pq
 import pandas as pd
 
 # tc_data = pq.read_table(source='teachers.parquet').to_pandas()
@@ -14,18 +13,26 @@ new_st_data = st_data[st_data.columns[0]].str.split("_", n = 6, expand=True)
 #
 #
 new_st_data['name'] = new_st_data[1] + '_' + new_st_data[2]
+new_st_data['cid'] = new_st_data[6]
 
 tc_data['name'] = tc_data['fname'] + '_' + tc_data['lname']
 
 json_data = {}
 for index, row in new_st_data.iterrows():
     for tc_index, tc_row in tc_data.iterrows():
-        if row[6] == tc_row['cid']:
-            json_data[row['name']] = {
-                "class": row[6],
-                "teacher_name": tc_row['name'],
-                "teacher_id": tc_row['id']
-            }
+        if row['cid'] == tc_row['cid']:
+            if row['name'] not in json_data:
+                json_data[row['name']] = [{
+                    "class": row['cid'],
+                    "teacher_name": tc_row['name'],
+                    "teacher_id": tc_row['id']
+                }]
+            else:
+                json_data[row['name']].append({
+                    "class": row['cid'],
+                    "teacher_name": tc_row['name'],
+                    "teacher_id": tc_row['id']
+                })
 
 import json
 with open('json_data.json', 'w') as fp:
